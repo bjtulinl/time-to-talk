@@ -1,0 +1,5 @@
+#main-section {
+    overflow: hidden; /* Makee this div contain its floated children */
+    width: 100%;
+}
+

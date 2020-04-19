@@ -1,7 +1,8 @@
 from time import localtime, strftime
-from flask import Flask, render_template, url_for, redirect, flash
+from flask import Flask, render_template, url_for, redirect, flash, request
 from flask_login import LoginManager, login_user, current_user, logout_user
 from flask_socketio import SocketIO, send, join_room, leave_room
+import json
 
 from wtform_fields import *
 from models import *
@@ -18,7 +19,8 @@ db = SQLAlchemy(app)
 
 # InitIalize Flask SocketIO
 socketio = SocketIO(app)
-ROOMS = ['ROOM 1', 'ROOM 2']
+CHANNELS = {"Channel 1":[], "Channel 2":[]}
+current_channel = "Channel 1"
 
 # Configure flask login
 login = LoginManager(app)
@@ -65,7 +67,8 @@ def chat():
     # if not current_user.is_authenticated:
     #     flash('Please login.', 'danger')
     #     return redirect(url_for('login '))
-    return render_template('chat.html', username=current_user.username, rooms=ROOMS)
+
+    return render_template('chat.html', username=current_user.username, f_channels=list(CHANNELS.keys()))
 
 
 @app.route("/logout", methods=['GET'])
@@ -77,23 +80,27 @@ def logout():
 
 @socketio.on('message')
 def message(data):
-    print(f"\n\n {data} \n\n")
-    send({"msg": data["msg"], "username": data["username"], "time_stamp": strftime('%b-%d %I:%M%p',localtime())},
-         room=data["room"])
+    # print(f"\n\n {data} \n\n")
+    send({"msg": data["msg"], "username": data["username"], "time_stamp": strftime('%b-%d %I:%M%p',localtime())},room=data['room'])
 
 
 @socketio.on('join')
 def join(data):
-
     join_room(data['room'])
-    send({'msg':data['username'] + "has joined the " + data['room'] + "room."}, room=data['room'])
+    send({'msg':data['username'] + " has joined the " + data['room'] + "room."},room=data['room'])
+    if data['username'] not in CHANNELS[data['room']]:
+        CHANNELS[data['room']].append(data['username'])
+    socketio.emit('list_users', {'lists':json.dumps(CHANNELS)})
+
 
 
 @socketio.on('leave')
 def leave(data):
     leave_room(data['room'])
-    send({'msg': data['username'] + "has left the " + data['room'] + "room."}, room=data['room'])
-
+    send({'msg': data['username'] + " has left the " + data['room'] + "room."}, room=data['room'])
+    if data['username'] in CHANNELS[data['room']]:
+        CHANNELS[data['room']].remove(data['username'])
+    socketio.emit('list_user', {'users': CHANNELS[data['room']]})
 
 
 if __name__ == "__main__":
