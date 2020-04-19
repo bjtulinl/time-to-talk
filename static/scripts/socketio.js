@@ -12,8 +12,9 @@ document.addEventListener('DOMContentLoaded', () =>{
         const br = document.createElement('br');
         if (data.msg) {
             if (typeof data.username === "undefined") {
-                p.setAttribute("class", "system-msg");
-                p.innerHTML = data.msg
+                // p.setAttribute("class", "system-msg");
+                // p.innerHTML = data.msg
+                document.getElementById('channel-title').innerText = data.msg;
             }
             else {
                 span_username.innerHTML = data.username;
@@ -29,9 +30,10 @@ document.addEventListener('DOMContentLoaded', () =>{
                     span_username.setAttribute("class","other-username")
                 }
                 p.innerHTML = span_username.outerHTML + br.outerHTML + data.msg + br.outerHTML + String.fromCodePoint(emoji_dict[data.sentiment]) + String(' ')+span_timestamp.outerHTML;
+                document.querySelector('#display-message-section').append(p);
+                scrollDownChatWindow()
             }
-            document.querySelector('#display-message-section').append(p);
-            scrollDownChatWindow()
+
         }
     });
 
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         let current_list = d[current_channel]
         let numbers_string = '';
         for (var i = 0; i < current_list.length; i++){
-            numbers_string = numbers_string + '<p>' + current_list[i].toString()  +'</p>';
+            numbers_string = numbers_string + '<li>' + current_list[i].toString()  +'</li>';
         };
         $('#current_users').html(numbers_string);
     });
