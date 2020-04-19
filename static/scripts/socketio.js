@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
     let current_channel = "Channel 1";
+    let emoji_dict = {"positive":0x1F601, "neutral":0x1F633, "negative":0x1F641}
     joinRoom(current_channel);
 
     socket.on('message', data => {
@@ -24,11 +25,10 @@ document.addEventListener('DOMContentLoaded', () =>{
                     span_username.setAttribute("class","my-username");
                 }
                 else {
-                    console.log('why')
                     p.setAttribute("class", "others-msg")
                     span_username.setAttribute("class","other-username")
                 }
-                p.innerHTML = span_username.outerHTML + br.outerHTML + data.msg + br.outerHTML + String.fromCodePoint(0x1F354) + String(' ')+span_timestamp.outerHTML;
+                p.innerHTML = span_username.outerHTML + br.outerHTML + data.msg + br.outerHTML + String.fromCodePoint(emoji_dict[data.sentiment]) + String(' ')+span_timestamp.outerHTML;
             }
             document.querySelector('#display-message-section').append(p);
             scrollDownChatWindow()

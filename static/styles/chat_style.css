@@ -11,10 +11,8 @@
     width: 100%;
 }
 
-.left{
-    float: left;
-    width: 10px;
-    height: 100%;
+#channel {
+    cursor: pointer;
 }
 
 #rightside-pannel {

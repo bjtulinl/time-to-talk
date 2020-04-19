@@ -35,7 +35,7 @@
                         <div class="tab-pane fade show active" id="channel" role="tabpanel" aria-labelledby="channel-tab">
                             <h4>Channels</h4>
                             {% for room in f_channels %}
-                                <p id="{{ room|title }}" class="select-room cursor-pointer">{{ room|title }}</p>
+                                <li id="{{ room|title }}" class="select-room cursor-pointer">{{ room|title }}</li>
                             {% endfor %}
                         </div>
                         <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">

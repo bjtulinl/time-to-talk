@@ -6,6 +6,7 @@ import json
 
 from wtform_fields import *
 from models import *
+from text_process import sentiment_analysis
 
 app = Flask(__name__)
 app.secret_key = 'replace later'
@@ -81,7 +82,9 @@ def logout():
 @socketio.on('message')
 def message(data):
     # print(f"\n\n {data} \n\n")
-    send({"msg": data["msg"], "username": data["username"], "time_stamp": strftime('%b-%d %I:%M%p',localtime())},room=data['room'])
+    sentiment = sentiment_analysis(data['msg'])
+    send({"msg": data["msg"], "username": data["username"], "time_stamp": strftime('%b-%d %I:%M%p',localtime()),
+          "sentiment":sentiment},room=data['room'])
 
 
 @socketio.on('join')
