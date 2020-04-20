@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title> {% block title %}{% endblock %} - Time-to-talk</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main_style.css') }}">
 </head>
 <body>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                Category: {{ messages[0][0] }}
-                {{ messages[0][1] }}
-            {% endif %}
-        {% endwith %}
+    <div class="login-page">
+        <div class="form">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <p>{{ messages[0][1] }}</p>
+                {% endif %}
+            {% endwith %}
 
 
-        {% block content %}
+            {% block content %}
 
-        {% endblock %}
+            {% endblock %}
+        </div>
+    </div>
 </body>
 </html>

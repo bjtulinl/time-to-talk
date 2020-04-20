@@ -20,8 +20,7 @@ db = SQLAlchemy(app)
 
 # InitIalize Flask SocketIO
 socketio = SocketIO(app)
-CHANNELS = {"Channel 1":[], "Channel 2":[]}
-current_channel = "Channel 1"
+CHANNELS = {"Channel 1":[], "Channel 2":[], "Channel 3":[], "Channel 4":[], "Channel 5":[], "Channel 6":[], "Channel 7":[], "Channel 8":[]}
 
 # Configure flask login
 login = LoginManager(app)
@@ -65,10 +64,6 @@ def login():
 
 @app.route("/chat", methods=['GET','POST'])
 def chat():
-    # if not current_user.is_authenticated:
-    #     flash('Please login.', 'danger')
-    #     return redirect(url_for('login '))
-
     return render_template('chat.html', username=current_user.username, f_channels=list(CHANNELS.keys()))
 
 
@@ -81,7 +76,6 @@ def logout():
 
 @socketio.on('message')
 def message(data):
-    # print(f"\n\n {data} \n\n")
     sentiment = sentiment_analysis(data['msg'])
     send({"msg": data["msg"], "username": data["username"], "time_stamp": strftime('%b-%d %I:%M%p',localtime()),
           "sentiment":sentiment},room=data['room'])
@@ -90,20 +84,20 @@ def message(data):
 @socketio.on('join')
 def join(data):
     join_room(data['room'])
-    send({'msg':data['username'] + " has joined the " + data['room'] + "room."},room=data['room'])
+    send({'msg':data['username'] + " has joined the " + data['room']},room=data['room'])
     if data['username'] not in CHANNELS[data['room']]:
         CHANNELS[data['room']].append(data['username'])
     socketio.emit('list_users', {'lists':json.dumps(CHANNELS)})
 
 
-
 @socketio.on('leave')
 def leave(data):
     leave_room(data['room'])
-    send({'msg': data['username'] + " has left the " + data['room'] + "room."}, room=data['room'])
-    if data['username'] in CHANNELS[data['room']]:
+    send({'msg': data['username'] + " has left the " + data['room']}, room=data['room'])
+    if data['room'] != '' and data['username'] in CHANNELS[data['room']]:
         CHANNELS[data['room']].remove(data['username'])
-    socketio.emit('list_user', {'users': CHANNELS[data['room']]})
+
+    socketio.emit('list_users', {'lists': json.dumps(CHANNELS)})
 
 
 if __name__ == "__main__":

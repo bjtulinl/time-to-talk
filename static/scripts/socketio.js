@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () =>{
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    let socket = io.connect('http://' + document.domain + ':' + location.port);
 
-    let current_channel = "Channel 1";
+    let current_channel = "";
     let emoji_dict = {"positive":0x1F601, "neutral":0x1F633, "negative":0x1F641}
-    joinRoom(current_channel);
 
     socket.on('message', data => {
         const p = document.createElement('p');
@@ -12,9 +11,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         const br = document.createElement('br');
         if (data.msg) {
             if (typeof data.username === "undefined") {
-                // p.setAttribute("class", "system-msg");
-                // p.innerHTML = data.msg
-                document.getElementById('channel-title').innerText = data.msg;
+                displaySystemMsg(data.msg);
             }
             else {
                 span_username.innerHTML = data.username;
@@ -41,9 +38,11 @@ document.addEventListener('DOMContentLoaded', () =>{
         let d = jQuery.parseJSON(msg.lists)
         let current_list = d[current_channel]
         let numbers_string = '';
-        for (var i = 0; i < current_list.length; i++){
-            numbers_string = numbers_string + '<li>' + current_list[i].toString()  +'</li>';
-        };
+        if (typeof(current_list) != "undefined"){
+            for (var i = 0; i < current_list.length; i++) {
+                numbers_string = numbers_string + '<li class="user-item">' + current_list[i].toString() + '</li>';
+            };
+        }
         $('#current_users').html(numbers_string);
     });
 
@@ -53,19 +52,27 @@ document.addEventListener('DOMContentLoaded', () =>{
         document.querySelector('#user_message').value = '';
     }
 
-    document.querySelectorAll('.select-room').forEach(p => {
-        p.onclick = () => {
-            let newRoom = p.innerHTML;
-            if (newRoom === current_channel){
-                msg = `You are already in ${current_channel} room.`
-                // printSysMsg(msg);
-            } else{
-              leaveRoom(current_channel);
-              joinRoom(newRoom);
-              current_channel = newRoom;
-            }
+
+    $(document).off("click", ".list-group .list-group-item").on("click",".list-group .list-group-item" ,function(){
+        $(this).siblings().removeClass("active");
+        $(this).addClass("active");
+        let newRoom = $(this).text();
+        if (newRoom === current_channel){
+            let msg = `You are already in ${current_channel}.`;
+            displaySystemMsg(msg);
+        } else if (current_channel.length === 0){
+            current_channel = newRoom;
+            joinRoom(newRoom);
+        } else {
+            leaveRoom(current_channel);
+            joinRoom(newRoom);
+            current_channel = newRoom;
         }
     });
+
+    document.querySelector("#logout-button").onclick = () => {
+        leaveRoom(current_channel);
+    }
 
     function leaveRoom(current_channel) {
         socket.emit('leave', {'username':username, 'room':current_channel});
@@ -80,6 +87,10 @@ document.addEventListener('DOMContentLoaded', () =>{
     function scrollDownChatWindow() {
         const chatWindow = document.querySelector("#display-message-section");
         chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function displaySystemMsg(text){
+        document.getElementById('channel-title').innerText = text;
     }
 
 })

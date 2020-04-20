@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>Time to talk!</title>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -15,14 +15,17 @@
                 <div>
                     <div class="col-lg-8">
                         <h1 class="title">{{ username }}</h1>
+                        <a id="logout-button" class="btn btn-primary" href="{{ url_for('logout') }}"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div>
                     <h2 id="channels">CHANNELS</h2>
                     <div id="channel-list">
-                        {% for room in f_channels %}
-                            <li id="{{ room|title }}" class="select-room cursor-pointer">{{ room|title }}</li>
-                        {% endfor %}
+                        <ul class="list-group">
+                            {% for room in f_channels %}
+                            <li id="{{ room|title }}" class="select-room list-group-item">{{ room|title }}</li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
                 <div id="row">
@@ -32,9 +35,9 @@
                 </div>
             </div>
 
-            <div class="animated bounceInDown" id="header">
+            <div class="ed bounceInDownanimat" id="header">
                 <h2 id="channel-title">
-
+                    Please select a channel first.
                 </h2>
                 <hr class="bottom-header-line" />
             </div>
