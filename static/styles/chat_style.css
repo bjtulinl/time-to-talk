@@ -11,8 +11,9 @@ body,html{
 }
 
 #square {
-    position: relative;
-    width: 100%;
+    position: absolute;
+    right: 0px;
+    left: 0px;
     height: 100%;
     display: block;
     margin: auto;
@@ -33,13 +34,11 @@ body,html{
 }
 
 #header {
-    width: 85%;
-    display: block;
-    margin:  auto;
-    height: 5%;
     position: absolute;
-    top: 1%;
+    display: block;
+    top: 5px;
     left: 200px;
+    right: 8px;
     background:none;
     background-size: cover;
     border-radius: 0%;
@@ -130,51 +129,33 @@ body,html{
     font-size: 14px;
 }
 
-#message-area{
-
-  position: absolute;
-  background: none;
-  width: 70%;
-  right: 2%;
-  top: 18%;
-  display: block;
-  margin:  auto;
-
-}
-
 #display-message-section {
     position: absolute;
+    right: 8px;
     left: 200px;
-    width: 88%;
     top: 60px;
     height: 83%;
     overflow-y: scroll; /*Make  this section scrolable */
 }
 
-.search-bottom{
-    position: absolute;
-    display: block;
-    margin: auto;
-    left: 17%;
-    bottom: 3%;
-    height: 5%;
-    width: 80%;
-    font-weight: 100;
-    padding-left: 28px;
-    font-family:"lato";
-    font-size: 12px;
-    opacity: 0.6;
-    color: #2C2D30;
-}
-
 #input-area {
     position: absolute;
-    left: 280px;
+    height: 30px;
+    left: 240px;
+    right: 48px;
     bottom: 20px;
-    width: 80%;
+    display: flex;
+}
+
+#user_message {
+    position: relative;
+    width: 100%;
 }
 
 #send_message {
+    position: relative;
+    height: 38px;
+    width: 100px;
     background: #ffc107;
 }
 
