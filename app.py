@@ -1,5 +1,6 @@
+import os
 from time import localtime, strftime
-from flask import Flask, render_template, url_for, redirect, flash, request
+from flask import Flask, render_template, url_for, redirect, flash
 from flask_login import LoginManager, login_user, current_user, logout_user
 from flask_socketio import SocketIO, send, join_room, leave_room
 import json
@@ -9,13 +10,11 @@ from models import *
 from text_process import sentiment_analysis
 
 app = Flask(__name__)
-app.secret_key = 'replace later'
+app.secret_key = os.environ.get('SECRET')
 
 # Configure database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://vookgbxycfnaik:8280f591472604c08c560a3e3cb262a02' \
-                                        '959805789f5db1b45db18252af77e08@ec2-54-247-79-178.eu-west-1.' \
-                                        'compute.amazonaws.com:5432/d7j01h7q0t9c6o'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 
 # InitIalize Flask SocketIO
@@ -101,4 +100,4 @@ def leave(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    app.run()
