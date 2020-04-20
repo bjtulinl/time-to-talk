@@ -149,12 +149,12 @@ body,html{
 
 #user_message {
     position: relative;
+    border-radius: 5px;
     width: 100%;
 }
 
 #send_message {
     position: relative;
-    height: 38px;
     width: 100px;
     background: #ffc107;
 }
